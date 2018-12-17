@@ -6,6 +6,9 @@
   "keywords": [],
   "dependencies": {
     "@sailshq/lodash": "^3.10.3",
+    "bcrypt-nodejs": "0.0.3",
+    "nodemon": "^1.18.9",
+    "passport": "^0.4.0",
     "sails": "^1.1.0",
     "sails-hook-orm": "^2.1.1",
     "sails-hook-sockets": "^1.5.5",
