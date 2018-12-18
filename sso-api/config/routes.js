@@ -10,5 +10,5 @@
 
 module.exports.routes = {
 
-    'post /signup': 'UserController.signup',
+    'post  /signup': 'UserController.signup',
 };

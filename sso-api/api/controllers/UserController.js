@@ -4,10 +4,16 @@
  * @description :: Server-side actions for handling incoming requests.
  * @help        :: See https://sailsjs.com/docs/concepts/actions
  */
+var bcrypt = require('bcrypt-nodejs');
 
 module.exports = {
-  signup: () => {
+  signup: (req, res) => {
     if (req.method == 'POST' && req.param('user', null) != null) {
+        var userData = req.param('user');
+        console.log(userData);
+        bcrypt.hash("bacon", null, null, function(err, hash) {
+            // Store hash in your password DB.
+        });
         User.create(req.param('user'), (error, person) => {
             if (error) {
                 res.send(error);
