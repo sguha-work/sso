@@ -10,7 +10,6 @@ module.exports = {
     signup: (req, res) => {
         if (req.method == 'POST' && req.param('user', null) != null) {
             var userData = req.param('user');
-            console.log(userData);
             bcrypt.genSalt(10, function(error, salt) {
                 if(error) {
                     res.send({
