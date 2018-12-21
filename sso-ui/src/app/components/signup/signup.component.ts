@@ -18,6 +18,21 @@ export class SignupComponent implements OnInit {
     this.model.confirmPassword = '';
   }
 
+  private signUp (userObject: any): void {
+    this.ajax.post('http://192.168.56.102:1337/signup', userObject).then((data) => {
+      if (typeof data.success !== 'undefined' && data.success) {
+        alert('Signup successfull! Redirecting you to login page');
+        this.router.navigate(['/login']);
+      } else {
+        if (typeof data.code !== 'undefined' && data.code === 'E_UNIQUE') {
+          alert('Email id already exists in database');
+        }
+      }
+    }).catch((error) => {
+      console.log('Error', error);
+    });
+  }
+
   public checkAndSignup() {
     if (this.model.email === '') {
       alert('Email cannot be empty');
@@ -37,17 +52,14 @@ export class SignupComponent implements OnInit {
         password: this.model.password
       }
     };
-    this.ajax.post('http://192.168.56.102:1337/signup', userObject).then((data) => {
-      if (typeof data.success !== 'undefined' && data.success) {
-        alert('Signup successfull! Redirecting you to login page');
-        this.router.navigate(['/login']);
+    this.ajax.post('http://192.168.56.102:1337/checkuser', {email: this.model.email}).then((data) => {
+      if (typeof data.userExists !== 'undefined' && !data.userExists) {
+        this.signUp(userObject);
       } else {
-        if (typeof data.code !== 'undefined' && data.code === 'E_UNIQUE') {
-          alert('Email id already exists in database');
-        }
+        alert('User already exists try different email id');
       }
     }).catch((error) => {
-      console.log('Error', error);
+      console.log('error, try after sometime');
     });
   }
 

@@ -7,35 +7,67 @@
 var bcrypt = require('bcrypt-nodejs');
 
 module.exports = {
-  signup: (req, res) => {
-    if (req.method == 'POST' && req.param('user', null) != null) {
-        var userData = req.param('user');
-        console.log(userData);
-        bcrypt.hash(userData.password, null, null, function(err, hash) {
-            // Store hash in your password DB.
-            userData.password = hash;
-            User.create(userData, (error, person) => {
-                if (error) {
-                    res.send(error);
+    signup: (req, res) => {
+        if (req.method == 'POST' && req.param('user', null) != null) {
+            var userData = req.param('user');
+            console.log(userData);
+            bcrypt.hash(userData.password, null, null, function (err, hash) {
+                // Store hash in your password DB.
+                userData.password = hash;
+                User.create(userData, (error, person) => {
+                    if (error) {
+                        res.send(error);
+                    } else {
+                        res.send({
+                            success: true,
+                            status: 200,
+                            message: 'Successfully created 1 row in database'
+                        });
+                    }
+                });
+            });
+
+        }
+        else {
+            res.send({
+                success: false,
+                status: 500,
+                message: 'Wrong data'
+            });
+        }
+    },
+
+    checkUserAlreadyExistsOrNot: (req, res) => {
+        if (req.method === 'POST' && req.param('email', null) !== null) {
+            User.find({
+                where: { email: req.param('email') },
+                select: ['email']
+            }).exec((error, data) => {
+                if (data.length) {
+                    res.send({
+                        success: true,
+                        userExists: true,
+                        data: data,
+                        status: 200
+                    });
                 } else {
                     res.send({
                         success: true,
-                        status: 200,
-                        message: 'Successfully created 1 row in database'
+                        userExists: false,
+                        data: data,
+                        status: 200
                     });
                 }
+
             });
-        });
-        
+        } else {
+            res.send({
+                success: false,
+                status: 500,
+                messege: 'Wring data'
+            })
+        }
     }
-    else {
-        res.send({
-            success: false,
-            status: 500,
-            message: 'Wrong data'
-        });
-    }
-  }
 
 };
 
