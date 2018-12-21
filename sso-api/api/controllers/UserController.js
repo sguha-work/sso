@@ -11,21 +11,32 @@ module.exports = {
         if (req.method == 'POST' && req.param('user', null) != null) {
             var userData = req.param('user');
             console.log(userData);
-            bcrypt.hash(userData.password, null, null, function (err, hash) {
-                // Store hash in your password DB.
-                userData.password = hash;
-                User.create(userData, (error, person) => {
-                    if (error) {
-                        res.send(error);
-                    } else {
-                        res.send({
-                            success: true,
-                            status: 200,
-                            message: 'Successfully created 1 row in database'
+            bcrypt.genSalt(10, function(error, salt) {
+                if(error) {
+                    res.send({
+                        success: false,
+                        data: error,
+                        status: 500
+                    })
+                } else {
+                    bcrypt.hash(userData.password, null, null, function (err, hash) {
+                        // Store hash in your password DB.
+                        userData.password = hash;
+                        User.create(userData, (error, person) => {
+                            if (error) {
+                                res.send(error);
+                            } else {
+                                res.send({
+                                    success: true,
+                                    status: 200,
+                                    message: 'Successfully created 1 row in database'
+                                });
+                            }
                         });
-                    }
-                });
+                    });
+                }
             });
+            
 
         }
         else {
