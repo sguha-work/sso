@@ -20,8 +20,5 @@ module.exports = {
       required: true
     }
   }
-
-
-
 };
 

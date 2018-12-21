@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Router } from '@angular/router';
 import { AjaxService } from './../../services/ajax.service';
 
 @Component({
@@ -11,7 +11,7 @@ export class SignupComponent implements OnInit {
 
   public model: any;
 
-  constructor(private ajax: AjaxService) {
+  constructor(private ajax: AjaxService, private router: Router) {
     this.model = {};
     this.model.email = '';
     this.model.password = '';
@@ -25,9 +25,10 @@ export class SignupComponent implements OnInit {
         password: this.model.password
       }
     };
-    console.log(userObject);
     this.ajax.post('http://192.168.56.102:1337/signup', userObject).then((data) => {
-      console.log('success');
+      console.log('success', data);
+      alert('Signup successfull! Redirecting you to login page');
+      this.router.navigate(['/login']);
     }).catch((error) => {
       console.log('Error', error);
     });

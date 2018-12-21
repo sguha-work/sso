@@ -11,6 +11,8 @@ import { AfterLoginHeaderComponent } from './components/after-login-header/after
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { BeforeLoginFooterComponent } from './components/before-login-footer/before-login-footer.component';
+import { AfterLoginFooterComponent } from './components/after-login-footer/after-login-footer.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { SignupComponent } from './components/signup/signup.component';
     AfterLoginHeaderComponent,
     HomeComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    BeforeLoginFooterComponent,
+    AfterLoginFooterComponent
   ],
   imports: [
     BrowserModule,
