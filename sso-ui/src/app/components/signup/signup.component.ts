@@ -19,6 +19,18 @@ export class SignupComponent implements OnInit {
   }
 
   public checkAndSignup() {
+    if (this.model.email === '') {
+      alert('Email cannot be empty');
+      return false;
+    }
+    if (this.model.password === '') {
+      alert('Password cannot be empty');
+      return false;
+    }
+    if (this.model.password !== this.model.confirmPassword) {
+      alert('Password and confirm password should match');
+      return false;
+    }
     const userObject: Object = {
       user: {
         email: this.model.email,
@@ -26,9 +38,14 @@ export class SignupComponent implements OnInit {
       }
     };
     this.ajax.post('http://192.168.56.102:1337/signup', userObject).then((data) => {
-      console.log('success', data);
-      alert('Signup successfull! Redirecting you to login page');
-      this.router.navigate(['/login']);
+      if (typeof data.success !== 'undefined' && data.success) {
+        alert('Signup successfull! Redirecting you to login page');
+        this.router.navigate(['/login']);
+      } else {
+        if (typeof data.code !== 'undefined' && data.code === 'E_UNIQUE') {
+          alert('Email id already exists in database');
+        }
+      }
     }).catch((error) => {
       console.log('Error', error);
     });
