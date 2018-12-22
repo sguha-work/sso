@@ -12,7 +12,7 @@ export class LoginComponent implements OnInit {
 
   public model: any;
 
-  constructor( private router: Router) {
+  constructor( private router: Router, private data: DataService, private ajax: AjaxService) {
     this.model = {};
     this.model.userName = '';
     this.model.password = '';
@@ -25,7 +25,18 @@ export class LoginComponent implements OnInit {
   }
 
   public checkCredentialsAndLogin() {
-
+    const userObject: Object = {
+      user: {
+        email: this.model.userName,
+        password: this.model.password
+      }
+    };
+    console.log('login', userObject);
+    this.ajax.post(this.data.serverURL + '/login', userObject).then((data) => {
+      console.log(data);
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 
   ngOnInit() {

@@ -77,7 +77,17 @@ module.exports = {
                 messege: 'Wring data'
             })
         }
-    }
+    },
 
+    login: (req, res) => {
+        if(req.method === 'POST' && req.param('user', null) !== null) {
+            res.cookie('cart', { items: [1,2,3] }, { maxAge: 900000 });
+        } else {
+            res.send({
+                success: false,
+                error: 'insufficient or wrong data'
+            });
+        }
+    }
 };
 
