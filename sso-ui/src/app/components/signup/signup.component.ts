@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { AjaxService } from './../../services/ajax.service';
+import { DataService } from './../../services/data.service';
 
 @Component({
   selector: 'app-signup',
@@ -11,7 +13,7 @@ export class SignupComponent implements OnInit {
 
   public model: any;
 
-  constructor(private ajax: AjaxService, private router: Router) {
+  constructor(private ajax: AjaxService, private router: Router, private data: DataService) {
     this.model = {};
     this.model.email = '';
     this.model.password = '';
@@ -19,7 +21,7 @@ export class SignupComponent implements OnInit {
   }
 
   private signUp (userObject: any): void {
-    this.ajax.post('http://192.168.56.102:1337/signup', userObject).then((data) => {
+    this.ajax.post(this.data.serverURL + '/signup', userObject).then((data) => {
       if (typeof data.success !== 'undefined' && data.success) {
         alert('Signup successfull! Redirecting you to login page');
         this.router.navigate(['/login']);
@@ -52,7 +54,7 @@ export class SignupComponent implements OnInit {
         password: this.model.password
       }
     };
-    this.ajax.post('http://192.168.56.102:1337/checkuser', {email: this.model.email}).then((data) => {
+    this.ajax.post(this.data.serverURL + '/checkuser', {email: this.model.email}).then((data) => {
       if (typeof data.userExists !== 'undefined' && !data.userExists) {
         this.signUp(userObject);
       } else {

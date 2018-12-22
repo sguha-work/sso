@@ -11,5 +11,6 @@
 module.exports.routes = {
 
     'post  /signup': 'UserController.signup',
-    'post  /checkuser': 'UserController.checkUserAlreadyExistsOrNot'	
+    'post  /checkuser': 'UserController.checkUserAlreadyExistsOrNot',
+    'post /login': 'UserController.login'	
 };
