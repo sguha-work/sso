@@ -10,15 +10,15 @@ module.exports = {
     signup: (req, res) => {
         if (req.method == 'POST' && req.param('user', null) != null) {
             var userData = req.param('user');
-            bcrypt.genSalt(10, function(error, salt) {
-                if(error) {
+            bcrypt.genSalt(10, function (error, salt) {
+                if (error) {
                     res.send({
                         success: false,
                         data: error,
                         status: 500
                     })
                 } else {
-                    bcrypt.hash(userData.password, null, null, function (err, hash) {
+                    bcrypt.hash(userData.password, salt, null, function (err, hash) {
                         // Store hash in your password DB.
                         userData.password = hash;
                         User.create(userData, (error, person) => {
@@ -35,7 +35,7 @@ module.exports = {
                     });
                 }
             });
-            
+
 
         }
         else {
@@ -80,8 +80,50 @@ module.exports = {
     },
 
     login: (req, res) => {
-        if(req.method === 'POST' && req.param('user', null) !== null) {
-            res.cookie('cart', { items: [1,2,3] }, { maxAge: 900000 });
+        if (req.method === 'POST' && req.param('user', null) !== null) {
+            var userData = req.param('user', null);
+            User.find({
+                where: {
+                    email: userData.email
+                },
+                select: ['email', 'password']
+            }).then((data) => {
+                // user exists need to check password
+                let passwordFromDatabase = data[0].password;
+                bcrypt.compare(userData.password, passwordFromDatabase, (err, match) => {
+                    if (err) {
+                        console.log("error", err);
+                        res.send({
+                            status: 500,
+                            error: 'Something wrong',
+                            data: err
+                        });
+                    }
+                    if (match) {
+                        res.send({
+                            status: 200,
+                            success: true,
+                            error: null,
+                            data: data
+                        });
+                    } else {
+                        res.send({
+                            status: 200,
+                            success: false,
+                            error: 'Password mismatch',
+                            data: null
+                        });
+                    }
+                })
+            }).catch(() => {
+                // user id not found sending false response
+                res.send({
+                    status: 200,
+                    success: false,
+                    error: "user not found",
+                    data: null
+                });
+            });
         } else {
             res.send({
                 success: false,
